@@ -51,12 +51,12 @@ function AuthGuard() {
 
     const inAuthGroup = segments[0] === "(auth)";
 
-    if (!session && !inAuthGroup) {
-      router.replace("/(auth)/login");
-    } else if (session && inAuthGroup) {
-      router.replace("/(tabs)/dashboard");
-    } else if (session && !segments.length) {
-      router.replace("/(tabs)/dashboard");
+    const onLanding = segments.length === 0; // root "/" = landing page
+
+    if (session && (inAuthGroup || onLanding)) {
+      router.replace("/(tabs)/dashboard"); // logged-in → skip landing/auth
+    } else if (!session && !inAuthGroup && !onLanding) {
+      router.replace("/"); // unauthenticated deep link → back to landing
     }
   }, [session, segments]);
 
