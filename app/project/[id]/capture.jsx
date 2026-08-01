@@ -196,7 +196,7 @@ export default function CaptureScreen() {
     }
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert("Camera Access", "RepairIQ needs camera access to capture photos.");
+      Alert.alert("Camera Access", "FixFromPix needs camera access to capture photos.");
       return;
     }
     await pickAndProcess(() =>

@@ -21,7 +21,7 @@ export default function HeaderLogo({ tappable = true }) {
         <Text style={{ fontSize: 15 }}>🔍</Text>
       </LinearGradient>
       <Text style={{ color: "#fff", fontSize: 15, fontWeight: "800", letterSpacing: -0.3 }}>
-        RepairIQ
+        FixFromPix
       </Text>
     </TouchableOpacity>
   );

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "RepairIQ",
-    "slug": "repairiq",
-    "scheme": "repairiq",
+    "name": "FixFromPix",
+    "slug": "fixfrompix",
+    "scheme": "fixfrompix",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,9 +10,9 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "RepairIQ uses your camera to capture photos of repair areas.",
-        "NSPhotoLibraryUsageDescription": "RepairIQ accesses your photo library to select images for repair analysis.",
-        "NSPhotoLibraryAddUsageDescription": "RepairIQ saves analysis results to your photo library."
+        "NSCameraUsageDescription": "FixFromPix uses your camera to capture photos of repair areas.",
+        "NSPhotoLibraryUsageDescription": "FixFromPix accesses your photo library to select images for repair analysis.",
+        "NSPhotoLibraryAddUsageDescription": "FixFromPix saves analysis results to your photo library."
       }
     },
     "android": {
@@ -40,13 +40,13 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "RepairIQ uses your camera to capture photos of repair areas."
+          "cameraPermission": "FixFromPix uses your camera to capture photos of repair areas."
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "RepairIQ accesses your photo library to select images for repair analysis."
+          "photosPermission": "FixFromPix accesses your photo library to select images for repair analysis."
         }
       ]
     ],

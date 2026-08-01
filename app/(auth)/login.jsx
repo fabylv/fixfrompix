@@ -60,7 +60,7 @@ export default function LoginScreen() {
               style={shadow({ color: "#F59E0B", opacity: 0.4, radius: 20, y: 8 })}>
               <Text style={{ fontSize: 36 }}>🔍</Text>
             </View>
-            <Text className="text-white text-4xl font-bold tracking-tight">RepairIQ</Text>
+            <Text className="text-white text-4xl font-bold tracking-tight">FixFromPix</Text>
             <Text className="text-white/50 text-sm mt-1.5 text-center">
               AI-powered repair estimates
             </Text>

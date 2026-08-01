@@ -81,11 +81,11 @@ export default function AccountScreen() {
   }
 
   function handleSupport() {
-    Linking.openURL("mailto:support@repairiq.app");
+    Linking.openURL("mailto:support@fixfrompix.app");
   }
 
   function handlePrivacy() {
-    Linking.openURL("https://repairiq.app/privacy");
+    Linking.openURL("https://fixfrompix.app/privacy");
   }
 
   function handleSignOut() {
@@ -178,8 +178,8 @@ export default function AccountScreen() {
         <Text className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-3 ml-1 mt-5">
           General
         </Text>
-        <Row icon="❓" label="Help & Support" sublabel="support@repairiq.app" onPress={handleSupport} />
-        <Row icon="📜" label="Privacy Policy" sublabel="repairiq.app/privacy" onPress={handlePrivacy} />
+        <Row icon="❓" label="Help & Support" sublabel="support@fixfrompix.app" onPress={handleSupport} />
+        <Row icon="📜" label="Privacy Policy" sublabel="fixfrompix.app/privacy" onPress={handlePrivacy} />
 
         <View className="mt-4">
           <Row icon="🚪" label="Sign Out" danger onPress={handleSignOut} />
