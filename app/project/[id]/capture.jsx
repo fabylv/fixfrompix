@@ -8,32 +8,10 @@ import { Alert, Image, Platform, ScrollView, Text, TouchableOpacity, View } from
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BottomNav from "../../../components/BottomNav";
 import HeaderLogo from "../../../components/HeaderLogo";
+import { analyzePhoto } from "../../../lib/ai/analyzePhoto";
 import { createIssues } from "../../../lib/api/issues";
 import { deletePhoto, uploadPhoto } from "../../../lib/api/photos";
 import { shadows } from "../../../lib/shadow";
-
-// ─── Mock AI results (cycles on each photo) ──────────────────────────────────
-const MOCK_RESULTS = [
-  { quality: "good", issues: [
-      { description: "Roof shingles cracked and lifting",        category: "Roofing",   severity: "high",   estimated_cost: 3500 },
-      { description: "Water stain on ceiling below roof",        category: "Structural", severity: "medium", estimated_cost: 800  },
-  ]},
-  { quality: "poor",  guidance: "Photo too dark — turn on a light or move closer." },
-  { quality: "good", issues: [
-      { description: "Mold visible behind bathroom tiles",       category: "Plumbing",  severity: "high",   estimated_cost: 2200 },
-  ]},
-  { quality: "poor",  guidance: "Too far away — get closer to the damaged area." },
-  { quality: "good", issues: [
-      { description: "HVAC filter clogged, needs service",       category: "HVAC",      severity: "medium", estimated_cost: 450  },
-      { description: "Duct tape patch on vent — needs repair",   category: "HVAC",      severity: "low",    estimated_cost: 120  },
-  ]},
-  { quality: "good", issues: [
-      { description: "Cracked floor tiles near sink",            category: "Flooring",  severity: "low",    estimated_cost: 300  },
-  ]},
-];
-
-let mockCycle = 0;
-const nextMock = () => MOCK_RESULTS[mockCycle++ % MOCK_RESULTS.length];
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const SEV_COLOR = { high: "#EF4444", medium: "#F59E0B", low: "#10B981" };
@@ -44,6 +22,7 @@ const CAT_ICON  = { Roofing:"🏠", Plumbing:"🔧", Electrical:"⚡", HVAC:"❄
 function PhotoCard({ photo, onRetake, onDelete }) {
   const { status, uri, result } = photo;
   const analyzing = status === "analyzing";
+  const isError   = status === "error";
   const isPoor    = result?.quality === "poor";
   const isGood    = result?.quality === "good";
   const issues    = result?.issues ?? [];
@@ -68,6 +47,14 @@ function PhotoCard({ photo, onRetake, onDelete }) {
             <Text style={{ fontSize:32 }}>🔍</Text>
             <Text style={{ color:"#F59E0B", fontWeight:"700", fontSize:14 }}>Analyzing photo…</Text>
             <Text style={{ color:"rgba(255,255,255,0.6)", fontSize:12 }}>AI is detecting repair issues</Text>
+          </View>
+        )}
+
+        {isError && (
+          <View style={{ position:"absolute", inset:0, backgroundColor:"rgba(26,31,46,0.85)", alignItems:"center", justifyContent:"center", gap:8 }}>
+            <Text style={{ fontSize:32 }}>❌</Text>
+            <Text style={{ color:"#EF4444", fontWeight:"700", fontSize:14 }}>Analysis failed</Text>
+            <Text style={{ color:"rgba(255,255,255,0.5)", fontSize:12 }}>Check your OpenRouter key</Text>
           </View>
         )}
 
@@ -227,13 +214,11 @@ export default function CaptureScreen() {
     const localId = `photo-${Date.now()}`;
     setPhotos((p) => [{ id: localId, uri: asset.uri, status: "analyzing", result: null }, ...p]);
 
-    try {
-      // 1. Mock AI analysis (replace with real AI later)
-      await new Promise((r) => setTimeout(r, 2000));
-      const result = nextMock();
+    let uploadedPhotoId   = null;
+    let uploadedPhotoUrl  = null;
 
-      // 2. Upload photo to Supabase Storage + save record
-      let uploadedPhotoId = null;
+    try {
+      // 1. Upload photo to Supabase Storage first — we use the public URL for AI analysis
       try {
         const uploaded = await uploadPhoto(projectId, {
           uri: asset.uri,
@@ -241,15 +226,23 @@ export default function CaptureScreen() {
           fileName: asset.fileName ?? `${localId}.jpg`,
         });
         if (uploaded?.id) {
-          uploadedPhotoId = uploaded.id;
+          uploadedPhotoId  = uploaded.id;
+          uploadedPhotoUrl = uploaded.public_url;
           setPhotos((p) => p.map((x) =>
             x.id === localId ? { ...x, dbId: uploaded.id, storagePath: uploaded.storage_path } : x
           ));
         }
       } catch (uploadErr) {
         console.warn("Photo upload failed:", uploadErr.message);
-        Alert.alert("Upload Error", uploadErr.message ?? "Photo could not be saved. Check your Supabase storage bucket.");
+        Alert.alert("Upload Error", uploadErr.message ?? "Photo could not be saved to storage.");
       }
+
+      // 2. AI analysis via OpenRouter — prefer the public Supabase URL, fall back to local URI
+      const result = await analyzePhoto({
+        photoUrl: uploadedPhotoUrl,
+        uri: asset.uri,
+        mimeType: asset.mimeType ?? "image/jpeg",
+      });
 
       // 3. Save detected issues to DB (linked to the photo)
       if (result.quality === "good" && result.issues?.length) {
@@ -273,13 +266,14 @@ export default function CaptureScreen() {
       queryClient.invalidateQueries({ queryKey: ["project", projectId] });
       queryClient.invalidateQueries({ queryKey: ["photos", projectId] });
 
-      // 4. Update local UI state
+      // 5. Update local UI state
       setPhotos((p) => p.map((x) => x.id === localId ? { ...x, status: "done", result } : x));
       if (result.quality === "good" && result.issues?.length) {
         setAllIssues((prev) => [...prev, ...result.issues.map((i) => ({ ...i, photoId: localId }))]);
       }
     } catch (e) {
       console.warn("processAsset error:", e.message);
+      Alert.alert("Analysis Failed", e.message ?? "Could not analyze photo.");
       setPhotos((p) => p.map((x) => x.id === localId ? { ...x, status: "error", result: null } : x));
     }
   }
