@@ -85,7 +85,7 @@ export default function AccountScreen() {
   }
 
   function handlePrivacy() {
-    Linking.openURL("https://fixfrompix.app/privacy");
+    router.push("/privacy");
   }
 
   function handleSignOut() {
@@ -180,6 +180,7 @@ export default function AccountScreen() {
         </Text>
         <Row icon="❓" label="Help & Support" sublabel="support@fixfrompix.app" onPress={handleSupport} />
         <Row icon="📜" label="Privacy Policy" sublabel="fixfrompix.app/privacy" onPress={handlePrivacy} />
+        <Row icon="📋" label="Terms of Service" sublabel="fixfrompix.app/terms" onPress={() => router.push("/terms")} />
 
         <View className="mt-4">
           <Row icon="🚪" label="Sign Out" danger onPress={handleSignOut} />

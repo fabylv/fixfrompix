@@ -325,14 +325,22 @@ export default function LandingPage() {
       </View>
 
       {/* ── FOOTER ── */}
-      <View style={{ backgroundColor: C.darkest, borderTopWidth: 1, borderTopColor: "rgba(255,255,255,0.05)", flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", paddingHorizontal: 36, paddingVertical: 28, paddingBottom: insets.bottom + 28, gap: 12 }}>
+      <View style={{ backgroundColor: C.darkest, borderTopWidth: 1, borderTopColor: "rgba(255,255,255,0.05)", flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", paddingHorizontal: 36, paddingVertical: 28, paddingBottom: insets.bottom + 28, gap: 16 }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
           <LinearGradient colors={[C.amber, C.amber2]} style={{ width: 30, height: 30, borderRadius: 9, alignItems: "center", justifyContent: "center" }}>
             <Text style={{ fontSize: 15 }}>🔍</Text>
           </LinearGradient>
           <Text style={{ color: "rgba(255,255,255,0.6)", fontSize: 15, fontWeight: "700" }}>FixFromPix</Text>
         </View>
-        <Text style={{ color: "rgba(255,255,255,0.25)", fontSize: 13 }}>© 2026 FixFromPix. All rights reserved.</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
+          <TouchableOpacity onPress={() => router.push("/privacy")}>
+            <Text style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, fontWeight: "500" }}>Privacy Policy</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/terms")}>
+            <Text style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, fontWeight: "500" }}>Terms of Service</Text>
+          </TouchableOpacity>
+          <Text style={{ color: "rgba(255,255,255,0.2)", fontSize: 13 }}>© 2026 FixFromPix</Text>
+        </View>
       </View>
 
     </ScrollView>

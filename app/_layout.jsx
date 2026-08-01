@@ -51,11 +51,12 @@ function AuthGuard() {
 
     const inAuthGroup = segments[0] === "(auth)";
 
-    const onLanding = segments.length === 0; // root "/" = landing page
+    const onLanding  = segments.length === 0;          // root "/"
+    const onPublic   = ["privacy", "terms"].includes(segments[0]); // public pages
 
     if (session && (inAuthGroup || onLanding)) {
       router.replace("/(tabs)/dashboard"); // logged-in → skip landing/auth
-    } else if (!session && !inAuthGroup && !onLanding) {
+    } else if (!session && !inAuthGroup && !onLanding && !onPublic) {
       router.replace("/"); // unauthenticated deep link → back to landing
     }
   }, [session, segments]);
