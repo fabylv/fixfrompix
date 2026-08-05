@@ -207,7 +207,7 @@ export default function LandingPage() {
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
               <View>
                 <Text style={{ color: C.muted, fontSize: 11, fontWeight: "600", textTransform: "uppercase", letterSpacing: 1 }}>Project</Text>
-                <Text style={{ color: C.white, fontSize: 17, fontWeight: "800" }}>123 Main Street</Text>
+                <Text style={{ color: C.white, fontSize: 17, fontWeight: "800" }}>Sample Property</Text>
               </View>
               <LinearGradient colors={["rgba(255,161,43,0.2)", "rgba(255,161,43,0.08)"]}
                 style={{ borderRadius: 10, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, borderColor: "rgba(255,161,43,0.25)" }}>
