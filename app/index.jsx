@@ -246,7 +246,6 @@ export default function LandingPage() {
       {/* ── STATS ── */}
       <View style={{ backgroundColor: "#171C27", paddingHorizontal: 32, paddingVertical: 60 }}>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 14, justifyContent: "center" }}>
-          <StatCard value="30s" label="Average analysis time per photo" icon="⚡" />
           <StatCard value="10+" label="Repair categories detected" icon="🔍" />
           <StatCard value="Free" label="Always free to download" icon="🎁" />
           <StatCard value="100%" label="AI-powered, no guesswork" icon="🤖" />
